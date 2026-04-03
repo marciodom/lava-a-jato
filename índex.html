@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Lava a Jato - Sistema Oficial</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0099ff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Lava a Jato">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    
+    <!-- Ícones -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #ffffff;
+            position: relative;
+            padding: 10px 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            position: relative;
+            min-height: 130px;
+        }
+
+        .brand-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        #main-title {
+            color: #0099ff;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .logo-container {
+            background-color: #0099ff;
+            width: 80px;
+            height: 80px;
+            border-radius: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2px;
+            margin-left: 15px;
+            overflow: hidden;
+        }
+
+        #system-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #sub-title {
+            color: #0099ff;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Botões do cabeçalho */
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .config-btn, .help-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .config-btn {
+            color: #000000;
+        }
+
+        .help-btn {
+            color: #0099ff;
+        }
+
+        .ticket-box {
+            background-color: #0099ff;
+            color: #ffffff;
+            padding: 8px 20px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+
+        .main-content {
+            background-color: #3399ff;
+            border-radius: 5px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            margin: 0;
+        }
+
+        .data-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .label-text {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .card-input {
+            background-color: #ffffff;
+            color: #0099ff;
+            width: 200px;
+            padding: 10px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .footer-action-area {
+            background-color: #ffffff;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btns-row {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .btn-ui {
+            background-color: #0099ff;
+            color: #ffffff;
+            border: none;
+            border-radius: 18px;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 15px;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .footer-rodape {
+            background-color: #ffffff;
+            color: #0099ff;
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            min-width: 200px;
+            max-width: 350px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: toastSlideIn 0.3s ease-out;
+            pointer-events: auto;
+        }
+
+        @keyframes toastSlideIn {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes toastSlideOut {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(100px); opacity: 0; }
+        }
+
+        .toast-success { background-color: #4CAF50; color: white; }
+        .toast-error { background-color: #f44336; color: white; }
+        .toast-info { background-color: #0099ff; color: white; }
+        .toast-warning { background-color: #ff9800; color: white; }
+
+        #modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-box {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 340px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            animation: modalIn 0.3s ease-out;
+        }
+
+        @keyframes modalIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-box h3 { color: #0099ff; margin-bottom: 15px; font-size: 20px; }
+        .modal-body { font-size: 16px; color: #333; margin-bottom: 20px; white-space: pre-line; text-align: left; }
+        .modal-btns { display: flex; gap: 10px; }
+        .modal-btn { flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 15px; }
+        .btn-confirm { background-color: #0099ff; color: #ffffff; }
+        .btn-cancel { background-color: #eeeeee; color: #333333; }
+
+        .input-modal {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 340px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            animation: modalIn 0.3s ease-out;
+        }
+        .input-modal input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid #0099ff;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        #report-hidden-area {
+            position: fixed;
+            left: -9999px;
+            width: 750px;
+            background: #ffffff;
+            color: #000000;
+            padding: 20px;
+        }
+        #report-hidden-area table { width: 100%; border-collapse: collapse; margin-top: 15px; table-layout: fixed; }
+        #report-hidden-area th, #report-hidden-area td { border: 1px solid #ccc; padding: 10px 8px; text-align: left; font-size: 12px; word-wrap: break-word; overflow-wrap: break-word; }
+        #report-hidden-area th { background-color: #0099ff; color: white; font-weight: bold; }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0099ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* PWA - Instalação */
+        .install-banner {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #0099ff;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10001;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .install-banner button {
+            background: white;
+            color: #0099ff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Tutorial Modal */
+        .tutorial-modal {
+            max-height: 70vh;
+            overflow-y: auto;
+            text-align: left;
+        }
+        .tutorial-modal p {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .tutorial-modal .step {
+            font-weight: bold;
+            color: #0099ff;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" id="app-capture-region">
+        
+        <header>
+            <div class="brand-area">
+                <h1 id="main-title">Lava a Jato</h1>
+                <div class="logo-container">
+                    <img src="icons/Carro.png" id="system-logo" alt="logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%230099ff\'/%3E%3Ccircle cx=\'30\' cy=\'65\' r=\'8\' fill=\'%23333\'/%3E%3Ccircle cx=\'70\' cy=\'65\' r=\'8\' fill=\'%23333\'/%3E%3Cpath d=\'M20 40 L30 25 L70 25 L80 40 L85 55 L15 55 Z\' fill=\'%23ff4444\'/%3E%3Crect x=\'35\' y=\'30\' width=\'30\' height=\'15\' fill=\'%2344aaff\'/%3E%3Cpath d=\'M15 55 L85 55 L80 65 L20 65 Z\' fill=\'%23333\'/%3E%3Cpath d=\'M25 40 L35 30\' stroke=\'%23fff\' stroke-width=\'2\'/%3E%3Ctext x=\'50\' y=\'85\' text-anchor=\'middle\' fill=\'white\' font-size=\'10\' font-weight=\'bold\'%3EWASH%3C/text%3E%3C/svg%3E'">
+                </div>
+                <h2 id="sub-title">Auto Wash</h2>
+            </div>
+            
+            <div class="header-buttons">
+                <button class="help-btn" onclick="openTutorialModal()">📜</button>
+                <button class="config-btn" onclick="openConfigModal()">⚙️</button>
+            </div>
+            <div class="ticket-box">Nº <span id="ticket-number-display">0001</span></div>
+        </header>
+
+        <div class="main-content">
+            <div class="data-row">
+                <span class="label-text">Nome do cliente</span>
+                <div class="card-input" id="field-name" onclick="openInputModal('field-name', 'Nome do Cliente')">NOME DO CLIENTE</div>
+            </div>
+            <div class="data-row">
+                <span class="label-text">Número<br>com DDD</span>
+                <div class="card-input" id="field-phone" onclick="openInputModal('field-phone', 'Número com DDD')">NUMERO COM DDD</div>
+            </div>
+            <div class="data-row">
+                <span class="label-text">Modelo do Veículo</span>
+                <div class="card-input" id="field-model" onclick="openInputModal('field-model', 'Modelo do Veículo')">MODELO DO VEICULO</div>
+            </div>
+            <div class="data-row">
+                <span class="label-text">Placa do veículo</span>
+                <div class="card-input" id="field-plate" onclick="openInputModal('field-plate', 'Placa do Veículo')">PLACA DO VEICULO</div>
+            </div>
+            <div class="data-row">
+                <span class="label-text">Valor do Serviço</span>
+                <div class="card-input" id="field-value" onclick="openInputModal('field-value', 'Valor do Serviço')">R$ 0,00</div>
+            </div>
+        </div>
+
+        <div class="footer-action-area" id="action-buttons-area">
+            <div class="btns-row">
+                <button class="btn-ui" id="btnEnviarRecibo" onclick="handleSendReceipt()">📨 Enviar Recibo</button>
+                <button class="btn-ui" onclick="generateReportData()">📊 Gerar Relatório</button>
+            </div>
+        </div>
+
+        <div class="footer-rodape">
+            © Todos os direitos reservados - Desenvolvido por Márcio Dom
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <div id="install-banner" class="install-banner">
+        <span>📱 Instalar App</span>
+        <button id="install-btn">Instalar</button>
+    </div>
+
+    <div id="modal-overlay">
+        <div class="modal-box">
+            <h3 id="modal-title-text">Título</h3>
+            <div class="modal-body" id="modal-body-content">Conteúdo</div>
+            <div class="modal-btns">
+                <button class="modal-btn btn-cancel" id="modal-btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button class="modal-btn btn-confirm" id="modal-btn-confirm">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="report-hidden-area"></div>
+
+    <script>
+        // Verificar primeiro acesso
+        const isFirstAccess = localStorage.getItem('lavajato_first_access') === null;
+        if (isFirstAccess) {
+            localStorage.setItem('lavajato_first_access', 'true');
+            setTimeout(() => {
+                showWelcomeToast();
+            }, 500);
+        }
+
+        function showWelcomeToast() {
+            showToast('📜 Seja Bem Vindo! Acesse o ícone de tutorial 📜 para ver instruções sobre o uso correto do sistema.', 'info');
+        }
+
+        // Tutorial Modal
+        function openTutorialModal() {
+            const overlay = document.getElementById('modal-overlay');
+            const tutorialHtml = `
+                <div class="modal-box tutorial-modal">
+                    <h3>📜 INSTRUÇÕES DE USO</h3>
+                    <div class="modal-body">
+                        <p>Esta Aplicação possui o funcionamento muito simples.</p>
+                        
+                        <p class="step">1️⃣</p>
+                        <p>No ícone de engrenagem no canto superior direito ⚙️, possui configurações para mudar o nome da empresa e a imagem de exibição.</p>
+                        
+                        <p class="step">2️⃣</p>
+                        <p>Preencha os dados do formulário corretamente, pois serão registrados no sistema, impressos no Recibo e no Relatório.</p>
+                        
+                        <p class="step">3️⃣</p>
+                        <p>Use o botão: <strong>"Enviar Recibo"</strong> para gerar e enviar o recibo para o cliente.</p>
+                        <p>Ao clicar em "Ok" , O sistema vai fazer download da imagem do recibo e abrir automaticamente o app do WhatsApp do cliente. Clique no ícone de anexo no app 📎, ao abrir a galeria, anexe a imagem baixada pelo sistema e envie ao cliente. </br>Ao clicar em "CANCELAR ", o sistema não irá gerar o recibo, mas gravará os dados no sistema e limpará os campos para inserção dos dados de outro cliente.</p>
+                        
+                        <p class="step">4️⃣</p>
+                        <p>Use o botão: <strong>"Gerar Relatório"</strong> para gerar um relatório completo com todas as atividades realizadas no dia, com as informações preenchidas no sistema e os valores apurados.</p>
+                        <p>O sistema irá gerar e baixar uma imagem com o relatório completo para você analisar ou enviar ao Administrador.</p>
+                        
+                        <p class="step">5️⃣</p>
+                        <p>Após o Download do Relatório no final de toda a atividade, acesse o botão de Configurações no canto superior direito ⚙️ e clique no botão vermelho: <strong>"Limpar Registro"</strong>, para limpar os registros do dia, caso não faça essa limpeza, os registros serão impressos nos relatórios posteriores.</p>
+                    </div>
+                    <div class="modal-btns">
+                        <button class="modal-btn btn-confirm" onclick="closeModal()">Entendi</button>
+                    </div>
+                </div>
+            `;
+            overlay.innerHTML = tutorialHtml;
+            overlay.style.display = 'flex';
+        }
+
+        // PWA Installation
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-banner').style.display = 'flex';
+        });
+
+        document.getElementById('install-btn')?.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    showToast('App instalado com sucesso!', 'success');
+                }
+                deferredPrompt = null;
+                document.getElementById('install-banner').style.display = 'none';
+            }
+        });
+
+        // ==================== TOAST FUNCTIONS ====================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'toastSlideOut 0.3s ease-out';
+                setTimeout(() => {
+                    if (toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        function formatPlate(plate) {
+            let cleaned = plate.trim().toUpperCase().replace(/\s+/g, '');
+            if (plate.includes(' ')) {
+                return plate.toUpperCase();
+            }
+            if (cleaned.length === 7) {
+                let letters = cleaned.substring(0, 3);
+                let numbers = cleaned.substring(3, 7);
+                return `${letters} ${numbers}`;
+            }
+            return cleaned;
+        }
+
+        function toUpperCaseText(text) {
+            return text.toUpperCase();
+        }
+
+        function clearAllFields() {
+            document.getElementById('field-name').innerText = 'NOME DO CLIENTE';
+            document.getElementById('field-phone').innerText = 'NUMERO COM DDD';
+            document.getElementById('field-model').innerText = 'MODELO DO VEICULO';
+            document.getElementById('field-plate').innerText = 'PLACA DO VEICULO';
+            document.getElementById('field-value').innerText = 'R$ 0,00';
+            
+            document.getElementById('field-name').style.color = "#0099ff";
+            document.getElementById('field-phone').style.color = "#0099ff";
+            document.getElementById('field-model').style.color = "#0099ff";
+            document.getElementById('field-plate').style.color = "#0099ff";
+            document.getElementById('field-value').style.color = "#0099ff";
+        }
+
+        const fieldLabels = {
+            'field-name': 'Nome do cliente',
+            'field-phone': 'Número com DDD',
+            'field-model': 'Modelo do Veículo',
+            'field-plate': 'Placa do Veículo',
+            'field-value': 'Valor do Serviço'
+        };
+
+        function openInputModal(fieldId, label) {
+            const overlay = document.getElementById('modal-overlay');
+            const modalHtml = `
+                <div class="input-modal">
+                    <h3 style="color: #0099ff; margin-bottom: 15px;">${label}</h3>
+                    <input type="text" id="modal-input-field" placeholder="Digite ${label.toLowerCase()}" autocomplete="off" value="">
+                    <div class="modal-btns">
+                        <button class="modal-btn btn-cancel" onclick="closeInputModal()">Cancelar</button>
+                        <button class="modal-btn btn-confirm" onclick="confirmInput('${fieldId}')">OK</button>
+                    </div>
+                </div>
+            `;
+            overlay.innerHTML = modalHtml;
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                const input = document.getElementById('modal-input-field');
+                if (input) input.focus();
+            }, 100);
+        }
+        
+        function closeInputModal() {
+            const overlay = document.getElementById('modal-overlay');
+            overlay.style.display = 'none';
+        }
+        
+        function confirmInput(fieldId) {
+            const input = document.getElementById('modal-input-field');
+            let newVal = input ? input.value.trim() : '';
+            
+            if (newVal !== "") {
+                if (fieldId === 'field-value') {
+                    let valor = newVal.replace(/[^0-9,]/g, '');
+                    if (valor === '') valor = '0,00';
+                    if (!valor.includes(',')) valor = valor + ',00';
+                    document.getElementById(fieldId).innerText = `R$ ${valor}`;
+                    document.getElementById(fieldId).style.color = "#0099ff";
+                    showToast(`Valor atualizado para R$ ${valor}`, 'success');
+                } else if (fieldId === 'field-plate') {
+                    let formattedPlate = formatPlate(newVal);
+                    document.getElementById(fieldId).innerText = formattedPlate;
+                    document.getElementById(fieldId).style.color = "#0099ff";
+                    showToast(`Placa atualizada: ${formattedPlate}`, 'success');
+                } else {
+                    let upperValue = toUpperCaseText(newVal);
+                    document.getElementById(fieldId).innerText = upperValue;
+                    document.getElementById(fieldId).style.color = "#0099ff";
+                    const label = fieldLabels[fieldId] || 'Campo';
+                    showToast(`${label} atualizado!`, 'success');
+                }
+            } else {
+                showToast('Nenhum valor foi inserido!', 'warning');
+            }
+            closeInputModal();
+        }
+
+        function showCustomAlert(message, isError = false) {
+            showToast(message, isError ? 'error' : 'info');
+        }
+
+        function showCustomConfirm(title, message, onConfirm, onCancel) {
+            const overlay = document.getElementById('modal-overlay');
+            overlay.innerHTML = `
+                <div class="modal-box">
+                    <h3>${title}</h3>
+                    <div class="modal-body">${message}</div>
+                    <div class="modal-btns">
+                        <button class="modal-btn btn-cancel" id="confirm-cancel">Cancelar</button>
+                        <button class="modal-btn btn-confirm" id="confirm-ok">OK</button>
+                    </div>
+                </div>
+            `;
+            overlay.style.display = 'flex';
+            document.getElementById('confirm-ok').onclick = () => {
+                if (onConfirm) onConfirm();
+                overlay.style.display = 'none';
+            };
+            document.getElementById('confirm-cancel').onclick = () => {
+                if (onCancel) onCancel();
+                overlay.style.display = 'none';
+            };
+        }
+
+        let currentCount = parseInt(localStorage.getItem('lavajato_count')) || 1;
+        let washHistory = JSON.parse(localStorage.getItem('lavajato_history')) || [];
+        updateCounterDisplay();
+
+        const savedLogo = localStorage.getItem('lavajato_logo');
+        if (savedLogo) document.getElementById('system-logo').src = savedLogo;
+
+        function updateCounterDisplay() {
+            document.getElementById('ticket-number-display').innerText = String(currentCount).padStart(4, '0');
+        }
+
+        function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+
+        function openConfigModal() {
+            const bodyHtml = `
+                <div style="text-align:left;">
+                    <p style="margin-bottom:8px; font-weight:bold;">Substituir Logo:</p>
+                    <input type="file" id="logo-file-input" accept="image/*" style="font-size:12px; margin-bottom:15px;">
+                    <p style="margin-bottom:8px; font-weight:bold;">Lava a Jato:</p>
+                    <input type="text" id="edit-main-title" value="${document.getElementById('main-title').innerText}" style="width:100%; margin-bottom:15px; padding:8px; border-radius:5px; border:1px solid #ccc;">
+                    <p style="margin-bottom:8px; font-weight:bold;">Auto Wash:</p>
+                    <input type="text" id="edit-sub-title" value="${document.getElementById('sub-title').innerText}" style="width:100%; margin-bottom:15px; padding:8px; border-radius:5px; border:1px solid #ccc;">
+                    <button onclick="clearSystemMemory()" style="background:#ff4444; color:white; border:none; padding:8px; border-radius:5px; width:100%; font-weight:bold; cursor:pointer;">Limpar Registro</button>
+                </div>
+            `;
+            const overlay = document.getElementById('modal-overlay');
+            overlay.innerHTML = `
+                <div class="modal-box">
+                    <h3>Configurações</h3>
+                    <div class="modal-body">${bodyHtml}</div>
+                    <div class="modal-btns">
+                        <button class="modal-btn btn-cancel" onclick="closeModal()">Cancelar</button>
+                        <button class="modal-btn btn-confirm" id="config-save">Salvar</button>
+                    </div>
+                </div>
+            `;
+            overlay.style.display = 'flex';
+            document.getElementById('config-save').onclick = () => {
+                const fileInput = document.getElementById('logo-file-input');
+                if (fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        document.getElementById('system-logo').src = e.target.result;
+                        localStorage.setItem('lavajato_logo', e.target.result);
+                        showToast('Logo atualizado com sucesso!', 'success');
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                }
+                document.getElementById('main-title').innerText = toUpperCaseText(document.getElementById('edit-main-title').value);
+                document.getElementById('sub-title').innerText = toUpperCaseText(document.getElementById('edit-sub-title').value);
+                showToast('Configurações salvas!', 'success');
+                closeModal();
+            };
+        }
+
+        function clearSystemMemory() {
+            showCustomConfirm('Limpar Registro', 'Apagar todo o histórico do dia?', () => {
+                localStorage.clear();
+                location.reload();
+            });
+        }
+
+        function nextCustomerWithoutReceipt() {
+            saveToHistory();
+            clearAllFields();
+            incrementCounter();
+            showToast('✅ Serviço registrado! Próximo atendimento!', 'success');
+        }
+
+        async function handleSendReceipt() {
+            const cliente = document.getElementById('field-name').innerText;
+            const phone = document.getElementById('field-phone').innerText;
+            
+            if (cliente === 'NOME DO CLIENTE') {
+                showToast('⚠️ Preencha o NOME do cliente primeiro!', 'warning');
+                return;
+            }
+            
+            if (phone === 'NUMERO COM DDD') {
+                showToast('⚠️ Preencha o NÚMERO com DDD do cliente primeiro!', 'warning');
+                return;
+            }
+            
+            const btn = document.getElementById('btnEnviarRecibo');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> Processando...';
+            
+            showCustomConfirm('📨 Enviar Recibo', `Enviar recibo para ${cliente}?`, 
+                async () => {
+                    saveToHistory();
+                    
+                    const imageBlob = await captureAppAsBlob();
+                    
+                    if (imageBlob) {
+                        let cleanNumber = phone.replace(/\D/g, '');
+                        
+                        if (cleanNumber.length < 10) {
+                            showToast('❌ Número inválido!', 'error');
+                            btn.disabled = false;
+                            btn.innerHTML = '📨 Enviar Recibo';
+                            return;
+                        }
+                        
+                        if (!cleanNumber.startsWith('55')) {
+                            cleanNumber = '55' + cleanNumber;
+                        }
+                        
+                        const numeroVia = String(currentCount).padStart(4, '0');
+                        const fileName = `recibo_${cliente.replace(/\s/g, '_')}_${numeroVia}.jpg`;
+                        const imageUrl = URL.createObjectURL(imageBlob);
+                        
+                        const downloadLink = document.createElement('a');
+                        downloadLink.download = fileName;
+                        downloadLink.href = imageUrl;
+                        downloadLink.click();
+                        
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        
+                        const mensagem = `✅ *Obrigado pela preferência!`;
+                        window.open(`https://wa.me/${cleanNumber}?text=${mensagem}`, '_blank');
+                        
+                        clearAllFields();
+                        incrementCounter();
+                        
+                        showToast(`✅ Recibo enviado para ${cliente}!`, 'success');
+                        
+                        setTimeout(() => URL.revokeObjectURL(imageUrl), 5000);
+                    } else {
+                        showToast('❌ Erro ao gerar imagem!', 'error');
+                    }
+                    
+                    btn.disabled = false;
+                    btn.innerHTML = '📨 Enviar Recibo';
+                },
+                () => {
+                    nextCustomerWithoutReceipt();
+                    btn.disabled = false;
+                    btn.innerHTML = '📨 Enviar Recibo';
+                }
+            );
+            
+            setTimeout(() => {
+                if (btn.disabled) {
+                    btn.disabled = false;
+                    btn.innerHTML = '📨 Enviar Recibo';
+                }
+            }, 5000);
+        }
+        
+        async function captureAppAsBlob() {
+            const region = document.getElementById('app-capture-region');
+            const btns = document.getElementById('action-buttons-area');
+            const configIcon = document.querySelector('.config-btn');
+            const helpIcon = document.querySelector('.help-btn');
+            const rodape = document.querySelector('.footer-rodape');
+            const mainContent = document.querySelector('.main-content');
+
+            // Esconde elementos que não devem aparecer na imagem
+            btns.style.display = 'none';
+            configIcon.style.display = 'none';
+            if (helpIcon) helpIcon.style.display = 'none';
+            rodape.style.display = 'none';
+            
+            const rectBottom = mainContent.getBoundingClientRect().bottom;
+            const rectTop = region.getBoundingClientRect().top;
+            const finalHeight = (rectBottom - rectTop) + 15;
+
+            await new Promise(resolve => setTimeout(resolve, 150));
+
+            try {
+                const canvas = await html2canvas(region, {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    height: finalHeight
+                });
+
+                return new Promise((resolve) => {
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, 'image/jpeg', 0.9);
+                });
+            } catch (error) {
+                console.error("Erro:", error);
+                return null;
+            } finally {
+                // Restaura os elementos
+                btns.style.display = 'flex';
+                configIcon.style.display = 'block';
+                if (helpIcon) helpIcon.style.display = 'block';
+                rodape.style.display = 'block';
+            }
+        }
+
+        function saveToHistory() {
+            const data = {
+                id: String(currentCount).padStart(4, '0'),
+                cliente: document.getElementById('field-name').innerText,
+                contato: document.getElementById('field-phone').innerText,
+                modelo: document.getElementById('field-model').innerText,
+                placa: document.getElementById('field-plate').innerText,
+                valor: document.getElementById('field-value').innerText,
+                data: new Date().toLocaleString('pt-BR')
+            };
+            washHistory.push(data);
+            localStorage.setItem('lavajato_history', JSON.stringify(washHistory));
+        }
+
+        function incrementCounter() {
+            currentCount++;
+            localStorage.setItem('lavajato_count', currentCount);
+            updateCounterDisplay();
+        }
+
+        function calculateTotalValue() {
+            let total = 0;
+            washHistory.forEach(entry => {
+                const valorStr = entry.valor;
+                const numeroMatch = valorStr.match(/[\d,]+/);
+                if (numeroMatch) {
+                    let numero = numeroMatch[0].replace(',', '.');
+                    total += parseFloat(numero);
+                }
+            });
+            return total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        async function generateReportData() {
+            if (washHistory.length === 0) {
+                showToast('📭 Sem dados para gerar relatório!', 'warning');
+                return;
+            }
+
+            const reportArea = document.getElementById('report-hidden-area');
+            const sortedHistory = [...washHistory].sort((a, b) => parseInt(a.id) - parseInt(b.id));
+            const valorTotal = calculateTotalValue();
+            
+            let tableHtml = `
+                <div style="text-align:center; margin-bottom: 20px;">
+                    <h2 style="color:#0099ff;">📊 RELATÓRIO DE ATIVIDADES</h2>
+                    <p style="font-size:12px;">Gerado em: ${new Date().toLocaleString('pt-BR')}</p>
+                </div>
+                <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                    <thead><tr style="background:#0099ff; color:white;">
+                        <th style="padding:10px;">Nº</th><th>Cliente</th><th>Contato</th><th>Modelo</th><th>Placa</th><th>Valor</th><th>Data</th>
+                    </tr></thead>
+                    <tbody>`;
+            
+            sortedHistory.forEach(e => {
+                tableHtml += `<tr>
+                    <td style="padding:8px; border:1px solid #ccc;">${e.id}</td>
+                    <td style="padding:8px; border:1px solid #ccc;">${e.cliente}</td>
+                    <td style="padding:8px; border:1px solid #ccc;">${e.contato}</td>
+                    <td style="padding:8px; border:1px solid #ccc;">${e.modelo}</td>
+                    <td style="padding:8px; border:1px solid #ccc;">${e.placa}</td>
+                    <td style="padding:8px; border:1px solid #ccc;">${e.valor}</td>
+                    <td style="padding:8px; border:1px solid #ccc; font-size:11px;">${e.data}</td>
+                </tr>`;
+            });
+            
+            tableHtml += `
+                    </tbody>
+                </table>
+                <div style="margin-top: 20px; padding: 15px; background-color: #0099ff; color: white; text-align: center; border-radius: 10px; font-weight: bold;">
+                    💰 VALOR TOTAL APURADO: R$ ${valorTotal}
+                </div>`;
+            
+            reportArea.innerHTML = tableHtml;
+            
+            try {
+                const canvas = await html2canvas(reportArea, { scale: 2 });
+                const link = document.createElement('a');
+                link.download = `relatorio_${new Date().toISOString().slice(0,10)}.jpg`;
+                link.href = canvas.toDataURL("image/jpeg", 0.95);
+                link.click();
+                showToast(`✅ Relatório gerado! Total: R$ ${valorTotal}`, 'success');
+            } catch (error) {
+                showToast('❌ Erro ao gerar relatório!', 'error');
+            } finally {
+                reportArea.innerHTML = "";
+            }
+        }
+    </script>
+</body>
+</html>
