@@ -367,6 +367,29 @@
             cursor: pointer;
         }
 
+        /* Botão de instalação no rodapé */
+        .install-footer-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 18px;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 15px;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            width: 80%;
+            max-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .install-footer-btn:hover {
+            background-color: #45a049;
+        }
+
         /* Tutorial Modal */
         .tutorial-modal {
             max-height: 70vh;
@@ -398,8 +421,8 @@
             </div>
             
             <div class="header-buttons">
-                <button class="help-btn" onclick="openTutorialModal()">📜</button>
-                <button class="config-btn" onclick="openConfigModal()">⚙️</button>
+                <button class="help-btn" onclick="openTutorialModal()">📚</button>
+                <button class="config-btn" onclick="openConfigModal()">⚙</button>
             </div>
             <div class="ticket-box">Nº <span id="ticket-number-display">0001</span></div>
         </header>
@@ -432,6 +455,7 @@
                 <button class="btn-ui" id="btnEnviarRecibo" onclick="handleSendReceipt()">📨 Enviar Recibo</button>
                 <button class="btn-ui" onclick="generateReportData()">📊 Gerar Relatório</button>
             </div>
+            <button class="install-footer-btn" id="install-footer-btn" onclick="requestInstall()" style="display: none;">📲 Instalar App</button>
         </div>
 
         <div class="footer-rodape">
@@ -469,7 +493,7 @@
         }
 
         function showWelcomeToast() {
-            showToast('📜 Seja Bem Vindo! Acesse o ícone de tutorial 📜 para ver instruções sobre o uso correto do sistema.', 'info');
+            showToast('📚 Seja Bem Vindo! Acesse o ícone de tutorial 📚 para ver instruções sobre o uso correto do sistema.', 'info');
         }
 
         // Tutorial Modal
@@ -477,7 +501,7 @@
             const overlay = document.getElementById('modal-overlay');
             const tutorialHtml = `
                 <div class="modal-box tutorial-modal">
-                    <h3>📜 INSTRUÇÕES DE USO</h3>
+                    <h3>📚 INSTRUÇÕES DE USO</h3>
                     <div class="modal-body">
                         <p>Esta Aplicação possui o funcionamento muito simples.</p>
                         
@@ -489,7 +513,7 @@
                         
                         <p class="step">3️⃣</p>
                         <p>Use o botão: <strong>"Enviar Recibo"</strong> para gerar e enviar o recibo para o cliente.</p>
-                        <p>Ao clicar em "Ok" , O sistema vai fazer download da imagem do recibo e abrir automaticamente o app do WhatsApp do cliente. Clique no ícone de anexo no app 📎, ao abrir a galeria, anexe a imagem baixada pelo sistema e envie ao cliente. </br>Ao clicar em "CANCELAR ", o sistema não irá gerar o recibo, mas gravará os dados no sistema e limpará os campos para inserção dos dados de outro cliente.</p>
+                        <p>O sistema vai fazer download da imagem do recibo e abrir automaticamente o app do WhatsApp do cliente. Clique no ícone de anexo no app 📎, ao abrir a galeria, anexe a imagem baixada pelo sistema e envie ao cliente.</p>
                         
                         <p class="step">4️⃣</p>
                         <p>Use o botão: <strong>"Gerar Relatório"</strong> para gerar um relatório completo com todas as atividades realizadas no dia, com as informações preenchidas no sistema e os valores apurados.</p>
@@ -507,24 +531,46 @@
             overlay.style.display = 'flex';
         }
 
-        // PWA Installation
+        // ==================== PWA INSTALLATION ====================
         let deferredPrompt;
+        
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            document.getElementById('install-banner').style.display = 'flex';
+            
+            // Mostrar botões de instalação
+            const installBanner = document.getElementById('install-banner');
+            const installFooterBtn = document.getElementById('install-footer-btn');
+            
+            if (installBanner) installBanner.style.display = 'flex';
+            if (installFooterBtn) installFooterBtn.style.display = 'flex';
         });
 
-        document.getElementById('install-btn')?.addEventListener('click', async () => {
+        // Função para solicitar instalação
+        async function requestInstall() {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
-                    showToast('App instalado com sucesso!', 'success');
+                    showToast('📱 App instalado com sucesso!', 'success');
+                } else {
+                    showToast('Instalação cancelada', 'info');
                 }
                 deferredPrompt = null;
-                document.getElementById('install-banner').style.display = 'none';
+                
+                // Esconder botões de instalação
+                const installBanner = document.getElementById('install-banner');
+                const installFooterBtn = document.getElementById('install-footer-btn');
+                
+                if (installBanner) installBanner.style.display = 'none';
+                if (installFooterBtn) installFooterBtn.style.display = 'none';
+            } else {
+                showToast('Seu navegador não suporta instalação automática. Acesse pelo menu do navegador.', 'warning');
             }
+        }
+
+        document.getElementById('install-btn')?.addEventListener('click', () => {
+            requestInstall();
         });
 
         // ==================== TOAST FUNCTIONS ====================
@@ -818,6 +864,7 @@
             const btns = document.getElementById('action-buttons-area');
             const configIcon = document.querySelector('.config-btn');
             const helpIcon = document.querySelector('.help-btn');
+            const installFooterBtn = document.getElementById('install-footer-btn');
             const rodape = document.querySelector('.footer-rodape');
             const mainContent = document.querySelector('.main-content');
 
@@ -825,6 +872,7 @@
             btns.style.display = 'none';
             configIcon.style.display = 'none';
             if (helpIcon) helpIcon.style.display = 'none';
+            if (installFooterBtn) installFooterBtn.style.display = 'none';
             rodape.style.display = 'none';
             
             const rectBottom = mainContent.getBoundingClientRect().bottom;
@@ -855,6 +903,14 @@
                 btns.style.display = 'flex';
                 configIcon.style.display = 'block';
                 if (helpIcon) helpIcon.style.display = 'block';
+                if (installFooterBtn) {
+                    // Verificar se ainda deve mostrar o botão
+                    if (deferredPrompt) {
+                        installFooterBtn.style.display = 'flex';
+                    } else {
+                        installFooterBtn.style.display = 'none';
+                    }
+                }
                 rodape.style.display = 'block';
             }
         }
@@ -947,6 +1003,14 @@
                 reportArea.innerHTML = "";
             }
         }
+        // Registrar Service Worker para PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('✅ Service Worker registrado:', reg))
+      .catch(err => console.error('❌ Erro ao registrar SW:', err));
+  });
+}
     </script>
 </body>
 </html>

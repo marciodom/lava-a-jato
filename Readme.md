@@ -51,8 +51,7 @@ lava-a-jato/
 │
 ├── icons/
 │   ├── icon-192.png
-│   ├── icon-32.png
-│   └── icon-16.png
+│   └── icon-512.png
 │
 └── README.md
 
