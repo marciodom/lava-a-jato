@@ -1,55 +1,56 @@
-const CACHE_NAME = 'lava-jato-v1.0.0';
+// Nome do cache (versione para forçar atualização)
+const CACHE_NAME = 'lava-jato-v1.0.1'; // Mudei a versão para garantir atualização
+
+// Arquivos que serão armazenados em cache para funcionar offline
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/Carro.png',
-  '/icons/icon-72.png',
-  '/icons/icon-96.png',
-  '/icons/icon-128.png',
-  '/icons/icon-144.png',
-  '/icons/icon-152.png',
-  '/icons/icon-192.png',
-  '/icons/icon-384.png',
-  '/icons/icon-512.png',
+  '/lava-a-jato/',
+  '/lava-a-jato/index.html',
+  '/lava-a-jato/manifest.json',
+  '/lava-a-jato/icons/icon-192.png',
+  '/lava-a-jato/icons/icon-512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
 ];
 
-// Instalação do Service Worker
+// Instalação: adiciona todos os arquivos ao cache
 self.addEventListener('install', event => {
+  console.log('[Service Worker] Instalando...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('✅ Cache aberto');
+        console.log('[Service Worker] Cache aberto, adicionando arquivos...');
         return cache.addAll(urlsToCache);
       })
       .catch(err => {
-        console.error('❌ Erro ao adicionar ao cache:', err);
+        console.error('[Service Worker] Erro ao adicionar ao cache:', err);
       })
   );
 });
 
-// Busca em cache primeiro
+// Busca: estratégia "Cache First" (busca no cache, depois na rede)
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
+        // Se achou no cache, retorna
         if (response) {
           return response;
         }
+        // Se não achou, busca na rede
         return fetch(event.request);
       })
   );
 });
 
-// Atualização do cache
+// Ativação: limpa caches antigos
 self.addEventListener('activate', event => {
+  console.log('[Service Worker] Ativando...');
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('[Service Worker] Deletando cache antigo:', cacheName);
             return caches.delete(cacheName);
           }
         })

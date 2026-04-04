@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Lava a Jato - Sistema Oficial</title>
+    <title>Lava a Jato </title>
     
     <!-- PWA Meta Tags -->
     <link rel="manifest" href="manifest.json">
@@ -14,8 +14,8 @@
     <link rel="apple-touch-icon" href="icons/icon-192.png">
     
     <!-- Ícones -->
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -415,14 +415,14 @@
             <div class="brand-area">
                 <h1 id="main-title">Lava a Jato</h1>
                 <div class="logo-container">
-                    <img src="icons/Carro.png" id="system-logo" alt="logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%230099ff\'/%3E%3Ccircle cx=\'30\' cy=\'65\' r=\'8\' fill=\'%23333\'/%3E%3Ccircle cx=\'70\' cy=\'65\' r=\'8\' fill=\'%23333\'/%3E%3Cpath d=\'M20 40 L30 25 L70 25 L80 40 L85 55 L15 55 Z\' fill=\'%23ff4444\'/%3E%3Crect x=\'35\' y=\'30\' width=\'30\' height=\'15\' fill=\'%2344aaff\'/%3E%3Cpath d=\'M15 55 L85 55 L80 65 L20 65 Z\' fill=\'%23333\'/%3E%3Cpath d=\'M25 40 L35 30\' stroke=\'%23fff\' stroke-width=\'2\'/%3E%3Ctext x=\'50\' y=\'85\' text-anchor=\'middle\' fill=\'white\' font-size=\'10\' font-weight=\'bold\'%3EWASH%3C/text%3E%3C/svg%3E'">
+                    <img src="icons/icon-192.png" id="system-logo" alt="logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'%3E%3Crect width=\'100\' height=\'100\' fill=\'%230099ff\'/%3E%3Ccircle cx=\'30\' cy=\'65\' r=\'8\' fill=\'%23333\'/%3E%3Ccircle cx=\'70\' cy=\'65\' r=\'8\' fill=\'%23333\'/%3E%3Cpath d=\'M20 40 L30 25 L70 25 L80 40 L85 55 L15 55 Z\' fill=\'%23ff4444\'/%3E%3Crect x=\'35\' y=\'30\' width=\'30\' height=\'15\' fill=\'%2344aaff\'/%3E%3Cpath d=\'M15 55 L85 55 L80 65 L20 65 Z\' fill=\'%23333\'/%3E%3Cpath d=\'M25 40 L35 30\' stroke=\'%23fff\' stroke-width=\'2\'/%3E%3Ctext x=\'50\' y=\'85\' text-anchor=\'middle\' fill=\'white\' font-size=\'10\' font-weight=\'bold\'%3EWASH%3C/text%3E%3C/svg%3E'">
                 </div>
                 <h2 id="sub-title">Auto Wash</h2>
             </div>
             
             <div class="header-buttons">
-                <button class="help-btn" onclick="openTutorialModal()">📚</button>
-                <button class="config-btn" onclick="openConfigModal()">⚙</button>
+                <button class="help-btn" onclick="openTutorialModal()">📜</button>
+                <button class="config-btn" onclick="openConfigModal()">⚙️</button>
             </div>
             <div class="ticket-box">Nº <span id="ticket-number-display">0001</span></div>
         </header>
@@ -493,7 +493,7 @@
         }
 
         function showWelcomeToast() {
-            showToast('📚 Seja Bem Vindo! Acesse o ícone de tutorial 📚 para ver instruções sobre o uso correto do sistema.', 'info');
+            showToast('📜 Seja Bem Vindo! Acesse o ícone de tutorial 📜 para ver instruções sobre o uso correto do sistema.', 'info');
         }
 
         // Tutorial Modal
@@ -501,7 +501,7 @@
             const overlay = document.getElementById('modal-overlay');
             const tutorialHtml = `
                 <div class="modal-box tutorial-modal">
-                    <h3>📚 INSTRUÇÕES DE USO</h3>
+                    <h3>📜 INSTRUÇÕES DE USO</h3>
                     <div class="modal-body">
                         <p>Esta Aplicação possui o funcionamento muito simples.</p>
                         
@@ -513,7 +513,7 @@
                         
                         <p class="step">3️⃣</p>
                         <p>Use o botão: <strong>"Enviar Recibo"</strong> para gerar e enviar o recibo para o cliente.</p>
-                        <p>O sistema vai fazer download da imagem do recibo e abrir automaticamente o app do WhatsApp do cliente. Clique no ícone de anexo no app 📎, ao abrir a galeria, anexe a imagem baixada pelo sistema e envie ao cliente.</p>
+                        <p>Ao clicar no botão: "OK" o sistema vai fazer download da imagem do recibo automaticamente e abrir  o app do WhatsApp numa conversa com o cliente. Clique no ícone de anexo no app 📎, ao abrir a galeria, anexe a imagem baixada pelo sistema e envie ao cliente.</br>Ao clicar no botão:"CANCELAR" O sistema não vai gerar o Recibo, mas vai registrar as informações do cliente que não quis o recibo, e limpará os campos para um novo cadastro de clientes</p>
                         
                         <p class="step">4️⃣</p>
                         <p>Use o botão: <strong>"Gerar Relatório"</strong> para gerar um relatório completo com todas as atividades realizadas no dia, com as informações preenchidas no sistema e os valores apurados.</p>
@@ -1003,14 +1003,29 @@
                 reportArea.innerHTML = "";
             }
         }
-        // Registrar Service Worker para PWA
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('✅ Service Worker registrado:', reg))
-      .catch(err => console.error('❌ Erro ao registrar SW:', err));
-  });
-}
+       
+    </script>
+
+    <!-- ==================== REGISTRO DO SERVICE WORKER (PWA) ==================== -->
+    <script>
+        // Verifica se o navegador suporta Service Workers
+        if ('serviceWorker' in navigator) {
+            // Aguarda a página carregar completamente para registrar
+            window.addEventListener('load', function() {
+                // Registra o sw.js na RAIZ do seu projeto GitHub Pages
+                // O 'lava-a-jato' é o nome do seu repositório
+                navigator.serviceWorker.register('/lava-a-jato/sw.js')
+                    .then(function(registration) {
+                        console.log('✅ Service Worker registrado com sucesso no escopo:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.error('❌ Erro ao registrar o Service Worker:', error);
+                    });
+            });
+        } else {
+            console.log('⚠️ Este navegador não suporta Service Workers (PWA não disponível)');
+        }
+   
     </script>
 </body>
 </html>

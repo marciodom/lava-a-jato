@@ -4,7 +4,7 @@ O sistema permite registrar serviços realizados, gerar recibos para clientes, e
 A aplicação funciona diretamente no navegador e também pode ser instalada no celular como um aplicativo, sem necessidade de lojas de aplicativos.
 🚀 Demonstração
 🔗 Acesse a aplicação:
-https://marciodom.github.io/lava-a-jato/⁠�
+https://marciodom.github.io/lava-a-jato/
 🎯 Funcionalidades
 • Registro de atendimento de clientes
 • Controle automático de número de atendimento (ticket)
@@ -71,7 +71,7 @@ Fluxo básico de uso:
 4️⃣ Enviar recibo para o cliente via WhatsApp
 5️⃣ Registrar atendimento no histórico
 6️⃣ Gerar relatório das atividades do dia
-📚 Aprendizados Aplicados
+📜 Aprendizados Aplicados
 Durante o desenvolvimento foram aplicados conhecimentos em:
 • Desenvolvimento de aplicações web responsivas
 • Estruturação de Progressive Web Apps
