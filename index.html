@@ -341,32 +341,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* PWA - Instalação */
-        .install-banner {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: #0099ff;
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 10001;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        .install-banner button {
-            background: white;
-            color: #0099ff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
         /* Botão de instalação no rodapé */
         .install-footer-btn {
             background-color: #4CAF50;
@@ -464,10 +438,6 @@
     </div>
 
     <div id="toast-container" class="toast-container"></div>
-    <div id="install-banner" class="install-banner">
-        <span>📱 Instalar App</span>
-        <button id="install-btn">Instalar</button>
-    </div>
 
     <div id="modal-overlay">
         <div class="modal-box">
@@ -538,11 +508,8 @@
             e.preventDefault();
             deferredPrompt = e;
             
-            // Mostrar botões de instalação
-            const installBanner = document.getElementById('install-banner');
+            // Mostrar apenas o botão verde no rodapé
             const installFooterBtn = document.getElementById('install-footer-btn');
-            
-            if (installBanner) installBanner.style.display = 'flex';
             if (installFooterBtn) installFooterBtn.style.display = 'flex';
         });
 
@@ -558,20 +525,13 @@
                 }
                 deferredPrompt = null;
                 
-                // Esconder botões de instalação
-                const installBanner = document.getElementById('install-banner');
+                // Esconder botão de instalação
                 const installFooterBtn = document.getElementById('install-footer-btn');
-                
-                if (installBanner) installBanner.style.display = 'none';
                 if (installFooterBtn) installFooterBtn.style.display = 'none';
             } else {
                 showToast('Seu navegador não suporta instalação automática. Acesse pelo menu do navegador.', 'warning');
             }
         }
-
-        document.getElementById('install-btn')?.addEventListener('click', () => {
-            requestInstall();
-        });
 
         // ==================== TOAST FUNCTIONS ====================
         function showToast(message, type = 'success') {
