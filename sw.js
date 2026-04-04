@@ -1,5 +1,5 @@
 // Nome do cache (versione para forçar atualização)
-const CACHE_NAME = 'lava-jato-v1.0.1'; // Mudei a versão para garantir atualização
+const CACHE_NAME = 'lava-jato-v1.0.2';
 
 // Arquivos que serão armazenados em cache para funcionar offline
 const urlsToCache = [
@@ -24,6 +24,7 @@ self.addEventListener('install', event => {
         console.error('[Service Worker] Erro ao adicionar ao cache:', err);
       })
   );
+  self.skipWaiting(); // Força ativação imediata
 });
 
 // Busca: estratégia "Cache First" (busca no cache, depois na rede)
@@ -55,6 +56,9 @@ self.addEventListener('activate', event => {
           }
         })
       );
+    }).then(() => {
+      console.log('[Service Worker] Pronto para controlar os clientes');
+      return self.clients.claim();
     })
   );
 });
